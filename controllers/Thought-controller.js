@@ -43,16 +43,6 @@ module.exports = {
             });
     },
 
-
-    //!```json
-    // example data
-    //!{
-    //!"thoughtText": "Here's a cool thought...",
-    //!"username": "lernantino",
-    //!"userId": "5edff358a0fcb779aa7b118b"
-
-    //!```
-
     //! `PUT` to update a thought by its `_id`
     updateThought(req, res) {
         Thought.findOneAndUpdate(
@@ -66,8 +56,6 @@ module.exports = {
                     : res.json(user)
             ).catch((err) => res.status(500).json(err));
     },
-
-
 
     //! `DELETE` to remove a thought by its `_id`
     deleteThought(req, res) {

@@ -46,22 +46,22 @@ module.exports = {
             .catch((err) => res.status(500).json(err));
     },
 
-    //!DELETE a user by _id
-    deleteUser(req, res) {
-        User.findOneAndDelete(
-            { _id: req.params.userId })
-            .then((user) =>
-                !user
-                    ? res.status(404).json({ message: "No user with this ID" })
-           //?thoughts here? : 
-            
-            )
-            .then(() => res.json({ message: "User and thought deleted" }))
+    // //!DELETE a user by _id
+    // deleteUser(req, res) {
+    //     User.findOneAndDelete(
+    //         { _id: req.params.userId })
+    //         .then((user) =>
+    //             !user
+    //                 ? res.status(404).json({ message: "No user with this ID" })
+    //        //?thoughts here? : 
 
-    },
+    //         )
+    //         .then(() => res.json({ message: "User and thought deleted" }))
+
+    // },
     //!add friend to user
     addFriend(req, res) {
-        User.findOneandUpdate(
+        User.findOneAndUpdate(
             { _id: req.params.userId },
             { $addToSet: { friends: req.body } },
             { runValidators: true, new: true }
@@ -78,7 +78,7 @@ module.exports = {
     //! `DELETE` to remove a friend from a user's friend list
 
     deleteFriend(req, res) {
-        User.findOneAndDelete(
+        User.findOneAndUpdate(
             { _id: req.params.userId },
             { $pull: { friends: req.params.friendId } },
             { new: true }

@@ -4,17 +4,17 @@ const {
     getSingleUser,
     createUser,
     updateUser,
-    deleteUser,
+    // deleteUser,
 
-} = require('../controllers/User-controller.js');
+} = require('../../controllers/User-controller.js');
 
 router.route('/').get(getUsers).post(createUser);
 
 router
     .route('/:userId')
-get(getSingleUser)
+    .get(getSingleUser)
     .put(updateUser)
-    .delete(deleteUser);
+// .delete(deleteUser);
 
 module.exports = router;
 
