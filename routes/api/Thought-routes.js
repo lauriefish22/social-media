@@ -1,4 +1,4 @@
-const router = require('express').Router();
+
 
 const router = require('express').Router();
 const {
@@ -16,6 +16,6 @@ router.route('/:thoughtId').get(getSingleThought).delete(deleteThought);
 
 router.route('/:thoughtId/reactions/:reactionId').delete(deleteReaction);
 
-router.route('/:thoughtId/reactions').post(addReaction);
+router.route('/:thoughtId/reactions').post(createReaction);
 
 module.exports = router;
