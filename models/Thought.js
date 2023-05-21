@@ -1,6 +1,6 @@
 
 const reactionSchema = require('./Reaction.js');
-const { Schema, model } = require('mongoose');
+const { Schema, model, Types } = require('mongoose');
 
 const thoughtSchema = new Schema(
     {
@@ -30,4 +30,4 @@ const thoughtSchema = new Schema(
     }
 );
 const Thought = model('Thought', thoughtSchema);
-module.exports = Thought;
+module.exports = Thought

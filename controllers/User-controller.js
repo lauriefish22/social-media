@@ -4,13 +4,14 @@ const { User, Thought } = require("../models");
 module.exports = {
     getUsers(req, res) {
         User.find()
+            .select('-__v')
             .then((users) => res.json(users))
             .catch((err) => res.status(500).json(err));
     },
     //!GET a single user by _id
     getSingleUser(req, res) {
         User.findOne({ _id: req.params.userId })
-            //?.select('-__v')
+            .select('-__v')
             .then(async (user) =>
                 !user
                     ? res.status(404).json({
@@ -47,18 +48,19 @@ module.exports = {
     },
 
     // //!DELETE a user by _id
-    // deleteUser(req, res) {
-    //     User.findOneAndDelete(
-    //         { _id: req.params.userId })
-    //         .then((user) =>
-    //             !user
-    //                 ? res.status(404).json({ message: "No user with this ID" })
-    //        //?thoughts here? : 
+    deleteUser(req, res) {
+        User.findOneAndDelete(
+            { _id: req.params.userId })
+            .then((user) =>
+                !user
+                    ? res.status(404).json({ message: "No user with this ID" })
+                    : Thought.deleteMany({ _id: { $in: user.thoughts } })
+            )
 
-    //         )
-    //         .then(() => res.json({ message: "User and thought deleted" }))
+            .then(() => res.json({ message: "User and thought deleted" }))
+            .catch((err) => res.status(500).json(err));
 
-    // },
+    },
     //!add friend to user
     addFriend(req, res) {
         User.findOneAndUpdate(

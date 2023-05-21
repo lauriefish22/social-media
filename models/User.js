@@ -22,22 +22,27 @@ const userSchema = new Schema(
         thoughts: [
             {
                 type: Schema.Types.ObjectId,
-                ref: 'thought',
+                ref: 'Thought',
             }
         ],
+        text: {
+            type: String,
+            minLength: 15,
+            maxLength: 500,
+        },
         friends: [
             {
                 type: Schema.Types.ObjectId,
-                ref: 'user',
+                ref: 'User',
 
             }],
     },
     {
         toJSON: {
-            getters: true,
+            virtuals: true,
         },
         id: false,
     }
 );
-const User = model('user', userSchema);
+const User = model('User', userSchema);
 module.exports = User;
