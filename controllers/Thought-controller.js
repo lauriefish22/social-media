@@ -1,4 +1,4 @@
-// const { ObjectId } = require('mongoose').Types; 
+// const { ObjectId } = require('mongoose').Types;
 const { User, Thought } = require("../models");
 
 //! get all thoughts
@@ -29,8 +29,8 @@ module.exports = {
         Thought.create(req.body)
             .then((thought) => {
                 return User.findOneAndUpdate(
-                    { _id: req.body.userId },
-                    { $addToSet: { thoughts: thought._id } },
+                    { username: req.body.username },
+                    { $push: { thoughts: thought._id } },
                     { new: true }
                 );
             })

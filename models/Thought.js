@@ -2,6 +2,7 @@
 const reactionSchema = require('./Reaction');
 const { Schema, model, Types } = require('mongoose');
 
+
 const thoughtSchema = new Schema(
     {
         thoughtText: {
