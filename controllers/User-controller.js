@@ -43,7 +43,7 @@ module.exports = {
         User.findOneAndUpdate(
             { _id: req.params.userId },
             { $set: req.body },
-            { runValidators: true, new: true }
+            { new: true }
         )
             .then((user) =>
                 !user
@@ -69,21 +69,37 @@ module.exports = {
             .catch((err) => res.status(500).json(err));
     },
     //!add friend to user
+    // addFriend(req, res) {
+    //     User.findOneAndUpdate(
+    //         { _id: req.params.userId },
+    //         { $addToSet: { friends: req.body } },
+    //         { runValidators: true, new: true }
+    //     )
+    //         .then((user) =>
+    //             !user
+    //                 ? res
+    //                     .status(404).json({ message: "No user with that ID" })
+
+    //                 : res.json(user)
+    //         )
+    //         .catch((err) => res.status(500).json(err));
+    // },
     addFriend(req, res) {
+        const { userId, friendId } = req.params;
+
         User.findOneAndUpdate(
-            { _id: req.params.userId },
-            { $addToSet: { friends: req.body } },
+            { _id: userId },
+            { $addToSet: { friends: friendId } },
             { runValidators: true, new: true }
         )
             .then((user) =>
                 !user
-                    ? res
-                        .status(404).json({ message: "No user with that ID" })
-
+                    ? res.status(404).json({ message: "No user with that ID" })
                     : res.json(user)
             )
             .catch((err) => res.status(500).json(err));
     },
+
     //! `DELETE` to remove a friend from a user's friend list
 
     deleteFriend(req, res) {
