@@ -1,18 +1,36 @@
 const { User, Thought } = require("../models");
-
+const { ObjectId } = require('mongoose').Types;
 //!GET all users
 module.exports = {
     getUsers(req, res) {
         User.find()
-            .select('-__v')
+            // .select('-__v')
             .then((users) => res.json(users))
             .catch((err) => res.status(500).json(err));
     },
     //!GET a single user by _id
+    // getSingleUser(req, res) {
+    //     User.findOne({ _id: req.params.userId })
+
+    //         .populate('thoughts')
+    //         .populate('friends')
+    //         .select('-__v')
+    //         .then((user) =>
+    //             !user
+    //                 ? res.status(404).json({
+    //                     message: 'No user with that ID'
+    //                 })
+    //                 : res.json(user)
+    //         )
+    //         .catch((err) => res.status(500).json(err));
+    // },
     getSingleUser(req, res) {
         User.findOne({ _id: req.params.userId })
             .select('-__v')
-            .populate('thoughts')
+            .populate({
+                path: 'thoughts',
+                select: '-__v' // Exclude the __v field from populated thoughts
+            })
             .populate('friends')
             .then((user) =>
                 !user
@@ -59,8 +77,11 @@ module.exports = {
                     : Thought.deleteMany({ _id: { $in: user.thoughts } })
             )
 
-            .then(() => res.json({ message: "User and thought deleted" }))
+            .then(() => {
+                res.json({ message: "User and thought deleted" });
+            })
             .catch((err) => res.status(500).json(err));
+
 
     },
     //!add friend to user
