@@ -14,28 +14,35 @@ module.exports = {
         Thought.findOne(
             { _id: req.params.thoughtId })
             // .select('-__v')
-            .then((thought) => {
-                if (!thought) {
-                    res.status(404).json({ message: "Nothing found with that ID" })
-                } else {
-                    res.json(thought);
-                }
-            })
-            .catch((err) => res.status(500).json(err));
+            .then((thought) =>
+                !thought
+                    ? res.status(404).json({ message: "Nothing found with that ID" })
+                    : res.json(thought)
+
+            )
+            .catch((err) => res.status(500).json(err))
     },
 
     //!  create a new thought (don't forget to push the created thought's `_id` to the associated user's `thoughts` array field)
     createThought(req, res) {
         Thought.create(req.body)
             .then((thought) => {
-                User.findOneAndUpdate(
-                    { username: thought.username },
-                    { $addToSet: { thoughts: thought._id } },
+                return User.findOneAndUpdate(
+                    { username: req.body.username },
+                    { $push: { thoughts: thought._id } },
                     { new: true }
-                )
-                    .then((user) => res.json({ thought, user }));
+                );
             })
-            .catch((err) => res.status(500).json(err));
+            .then((user) => {
+                if (!user) {
+                    return res.status(404).json({ message: "no user found" })
+                }
+                res.status(200).json(user);
+            })
+            .catch((err) => {
+                console.log(err);
+                return res.status(500).json(err);
+            });
     },
 
     //! `PUT` to update a thought by its `_id`
@@ -61,23 +68,18 @@ module.exports = {
                     ? res.status(404).json({ message: "no thought with this ID" })
                     : User.findOneAndUpdate(
                         { thoughts: req.params.thoughtId },
-                        { $pull: { thoughts: req.params.thoughtID } },
-                        { new: true }
+                        { $pull: { thoughts: req.params.thoughtId } },
+                        { runValidators: true, new: true }
                     )
             )
-            .then((user) => {
-                if (!user) {
-                    res.status(404).json({ message: "thought deleted but no user with that ID found" })
-                } else {
+            .then((user) =>
+                !user
+                    ? res.status(404).json({ message: "thought deleted but no user with that ID found" })
+                    : res.json({ message: "thought deleted" })
 
-                    res.json({ message: "thought deleted" });
-                }
-            })
+            )
             .catch((err) => res.status(500).json(err));
     },
-
-
-
     //?`/api/thoughts/:thoughtId/reactions`**
 
     //!`POST` to create a reaction stored in a single thought's `reactions` array field
