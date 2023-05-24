@@ -1,4 +1,5 @@
-const { Schema } = require('mongoose');
+const { Schema, Types } = require('mongoose');
+const moment = require('moment');
 
 
 const reactionSchema = new Schema(
@@ -18,9 +19,19 @@ const reactionSchema = new Schema(
             required: true
         },
         createdAt: {
-            //!date info needed
-        }
+            type: Date,
+            default: Date.now,
+            get: (date) => moment(date).format("MMM DD, YYYY"),
+        },
+    },
+    {
+        toJSON: {
+            virtuals: true,
+        },
+        id: false,
     }
-)
-//!json?
-module.exports = reactionSchema 
+);
+
+
+
+module.exports = reactionSchema;

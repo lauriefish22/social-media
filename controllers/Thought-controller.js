@@ -1,4 +1,4 @@
-// const { ObjectId } = require('mongoose').Types;
+const { ObjectId } = require('mongoose').Types;
 const { User, Thought } = require("../models");
 
 //! get all thoughts
@@ -89,13 +89,11 @@ module.exports = {
             { $addToSet: { reactions: req.body } },
             { runValidators: true, new: true }
         )
-            .then((thought) => {
-                if (!thought) {
-                    res.status(404).json({ message: "No thought with that ID" });
-                } else {
-                    res.json(thought);
-                }
-            })
+            .then((thought) =>
+                !thought
+                    ? res.status(404).json({ message: "No thought with that ID" })
+                    : res.json(thought)
+            )
             .catch((err) => res.status(500).json(err));
     },
     //! `DELETE` to pull and remove a reaction by the reaction's `reactionId` value
@@ -105,13 +103,11 @@ module.exports = {
             { $pull: { reactions: { reactionId: req.params.reactionId } } },
             { runValidators: true, new: true }
         )
-            .then((thought) => {
-                if (!thought) {
-                    res.status(404).json({ message: "No thought with that ID" })
-                } else {
-                    res.json(thought);
-                }
-            })
+            .then((thought) =>
+                !thought
+                    ? res.status(404).json({ message: "No thought with that ID" })
+                    : res.json(thought)
+            )
             .catch((err) => res.status(500).json(err));
     },
 };
